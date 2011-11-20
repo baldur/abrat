@@ -26,7 +26,6 @@
                 $('body .' + sel).on('mousedown', 'a', function(e) {
                     // report that abrat element was clicked
                     _gaq.push(['_trackEvent', sel, 'clicked']);
-                    e.preventDefault();
                 });
             });
         });
@@ -60,13 +59,14 @@
             <a class="btn large primary" href="">click</a>
             </p>
         </div>
-    </div>
 
-    <div class="ba-a">experiment ba a
-        <a href="">link</a>
-    </div>
-    <div class="ba-b">experiment ba b
-        <a href="">link</a>
+        <div class="span-6 ba-a">experiment ba a
+            <a class="btn large info" href="">link</a>
+        </div>
+        <div class="span-6 ba-b">experiment ba b
+            <a class="btn small info" href="">link</a>
+        </div>
+
     </div>
 
     <div class="sh-a">experiment sh a
