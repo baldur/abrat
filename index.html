@@ -1,1 +1,63 @@
-My GitHub Page
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>abrat</title>
+<script src="./vendor/jquery.js"></script>
+<link rel="stylesheet" type="text/css" href="./vendor/bootstrap.css" />
+<script>
+    var PATCH = {};
+    var ABcfg = {
+        ns : PATCH, //defaults to ABcfg
+        //cookieName : '', //defaults to abtests
+        experiments : 'cl3-sh4-ba4' // what experiemnts are running on page
+    };
+</script>
+</head>
+
+<body id="index" class="home">
+    <script src="https://github.com/baldur/abrat/blob/master/src/abrat.js"></script>
+    <script>
+        console.log(PATCH.ab.report());
+        PATCH.ab.attachHandlers(function(sel){
+            $(function(){
+                // for older than 1.7 use
+                //$('body .' + sel).delegate('a','mousedown', function() {
+                $('body .' + sel).on('mousedown', 'a', function() {
+                    alert(sel);
+                    console.log('report to reporting');
+                });
+            });
+        });
+    </script>
+
+    <div class="row">
+        <div class="span-6 cl-a">
+            <p>Testing info button:
+            <a class="btn large info" href="">click</a>
+            </p>
+        </div>
+
+        <div class="span-6 cl-b">
+            <p>Testing primary button:
+            <a class="btn large primary" href="">click</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="ba-a">experiment ba a
+        <a href="">link</a>
+    </div>
+    <div class="ba-b">experiment ba b
+        <a href="">link</a>
+    </div>
+
+    <div class="sh-a">experiment sh a
+        <a href="">link</a>
+    </div>
+    <div class="sh-b">experiment sh b
+        <a href="">link</a>
+    </div>
+    <p> just something random</p>
+</body>
+</html>
