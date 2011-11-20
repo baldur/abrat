@@ -23,9 +23,10 @@
             $(function(){
                 // for older than 1.7 use
                 //$('body .' + sel).delegate('a','mousedown', function() {
-                $('body .' + sel).on('mousedown', 'a', function() {
+                $('body .' + sel).on('mousedown', 'a', function(e) {
                     // report that abrat element was clicked
                     _gaq.push(['_trackEvent', sel, 'clicked']);
+                    e.preventDefault();
                 });
             });
         });
