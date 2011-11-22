@@ -1,7 +1,7 @@
 (function() {
-    var ns = ABcfg.ns || ABcfg,
-        cookieName = ABcfg.cookieName || 'abtests',
-        experiments = ABcfg.experiments;
+    var ns = $ABRAT.ns || $ABRAT,
+        cookieName = $ABRAT.cookieName || 'abtests',
+        experiments = $ABRAT.experiments;
 
     if(!String.prototype.trim) {
         String.prototype.trim = function () {
