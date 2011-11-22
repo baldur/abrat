@@ -1,4 +1,4 @@
-# ABRAT how to
+# ABRAT how to [example](http://baldur.github.com/abrat/)
 
 ## Magic happens in three steps
 1. configuration object in head or right before script is called
