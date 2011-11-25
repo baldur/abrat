@@ -41,6 +41,10 @@
                     // report that abrat element was clicked
                     _gaq.push(['_trackEvent', sel, 'clicked']);
                 });
+                // just for debugging 
+                $('body .' + sel).on('click', 'a', function(e) {
+                    e.preventDefault();
+                });
             });
         });
     </script>
