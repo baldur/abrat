@@ -81,8 +81,14 @@
             'getCssText' : function(){
                 return style;
             },
-            'report' :  function(){
-                return getCookie(cookieName);
+            'report' :  function(func){
+                var ret = {};
+                for(var i in variants) {
+                    if(variants.hasOwnProperty(i)) {
+                        ret[i] = ['a','b'][variants[i]];
+                    }
+                }
+                return func(ret);
             },
             'attachHandlers' : function(func){
                 for(var i in variants) {
