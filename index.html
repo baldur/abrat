@@ -10,6 +10,10 @@
     var $ABRAT = {
         ns : PATCH, //defaults to $ABRAT 
         //cookieName : '', //defaults to abtests
+        names : {
+            cl: 'primary vs info',
+            sh: 'large vs small'
+        },
         experiments : 'cl3-sh4-ba4' // what experiemnts are running on page
     };
 </script>
@@ -18,18 +22,19 @@
 <body id="index" class="home">
 
     <!-- for simple --> 
-    <!-- <script src="./src/abrat.js"></script> -->
+    <script src="./src/abrat.js"></script>
 
     <!-- for optimized pages one less http request  -->
+    <!--
     <script>
         (function(){var b=$ABRAT.ns||$ABRAT,g=$ABRAT.cookieName||"abtests",j=$ABRAT.experiments;if(!String.prototype.trim)String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g,"")};var i=function(a){var b=null;if(document.cookie&&""!=document.cookie)for(var c=document.cookie.split(";"),h=0;h<c.length;h++){var d=c[h].trim();if(d.substring(0,a.length+1)==a+"="){b=decodeURIComponent(d.substring(a.length+1).replace(/\+/g," "));break}}return b};b.ab=function(){var a=function(c){var b={};if(c){var c=
         c.split("-"),a;for(a in c)c.hasOwnProperty(a)&&(b[c[a].slice(0,-1)]=parseInt(c[a].slice(-1),10))}return b},b="";return{running_experiments:a(j),variants:a(i(g)),encode:function(a){var b="",d;for(d in a)a.hasOwnProperty(d)&&(b+=d+a[d]+"-");return b.slice(0,-1)},switcher:function(a){var b=Math.ceil(10*Math.random());arguments.length||(a=5);return a<=b?0:1},writeRules:function(a){b+="body."+a+"-a ."+a+"-b { display: none !important }";b+="body."+a+"-b ."+a+"-a { display: none !important }"},getCSSrules:function(){return document.createTextNode(b)},
         getCssText:function(){return b},report:function(){return i(g)},attachHandlers:function(a){for(var b in e)e.hasOwnProperty(b)&&a(b+"-"+["a","b"][e[b]])}}}();for(var a in b.ab.running_experiments)if(b.ab.running_experiments.hasOwnProperty(a)){var f,e=b.ab.variants;"undefined"!==typeof e[a]?f=["a","b"][e[a]]:(f=["a","b"][b.ab.switcher(b.ab.running_experiments[a])],e[a]=["a","b"].indexOf(f));document.body.className+=" "+a+"-"+f;b.ab.writeRules(a)}(function(a,b){document.cookie=a+"="+encodeURIComponent(b)})(g,
         b.ab.encode(b.ab.variants));a=document.createElement("style");a.setAttribute("type","text/css");a.styleSheet?a.styleSheet.cssText=b.ab.getCssText():a.appendChild(b.ab.getCSSrules());document.getElementsByTagName("head")[0].appendChild(a)})();
     </script>
+    -->
 
     <script>
-        console.log(PATCH.ab.report());
         PATCH.ab.attachHandlers(function(sel){
             $(function(){
                 // for older than 1.7 use
@@ -47,7 +52,10 @@
     _gaq.push(['_setAccount', 'UA-565491-13']);
     // report abrat stuff to google analytics
                              // | which custom var                // | scope visitor level
-    _gaq.push(['_setCustomVar', 1, 'Experiments', PATCH.ab.report(), 1]);
+    var experiments = PATCH.ab.report(function(abhash){
+        return $.map(abhash, function(v,k){return k+"-"+v}).join(" | ");
+    });
+    _gaq.push(['_setCustomVar', 1, 'Experiments', expermiments, 1]);
     // end abrat stuff
     _gaq.push(['_trackPageview']);
 
@@ -60,7 +68,10 @@
     </script>
 
     <div class="container">
-        <h1>Some random experiments</h1>
+        <img src="img/gray-rat.jpg" />
+        <h1>ABrat <small>a cache tolerant ab switch</small></h1>
+
+        <h2>Sample Experiments</h2>
         <div class="row">
             <div class="span-6 cl-a">
                 <p>Testing info button:
@@ -79,18 +90,6 @@
             </div>
             <div class="span-6 ba-b">experiment ba b
                 <a class="btn small info" href="">link</a>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="span-10 sh-a">
-                <h2>experiment sh a</h2>
-                <a href="">link</a>
-            </div>
-            <div class="span-10 sh-b">
-                <h3>experiment sh b</h3>
-                <a href="">link</a>
             </div>
         </div>
     </div>
