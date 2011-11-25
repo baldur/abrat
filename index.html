@@ -40,6 +40,7 @@
                 $('body .' + sel).on('mousedown', 'a', function(e) {
                     // report that abrat element was clicked
                     _gaq.push(['_trackEvent', sel, 'clicked']);
+                    $('#console').append($('<li>').html(sel + " : clicked"));
                 });
                 // just for debugging 
                 $('body .' + sel).on('click', 'a', function(e) {
@@ -67,31 +68,49 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
 
+    $(function(){
+        $('#console').append($('<li>').html(experiments));
+        $('#deleteCookie').click(function(e){
+            var name = $ABRAT.cookieName || 'abtests';
+            document.cookie = name + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
+            e.preventDefault();
+        });
+    });
+
     </script>
 
-    <div class="container">
-        <img src="img/gray-rat.jpg" />
-        <h1>ABrat <small>a cache tolerant ab switch</small></h1>
+    <div class="container-fluid">
+        <div class="sidebar">
+            <h3>Overview</h3>
+            <a id="deleteCookie" class="btn small danger" href="">Delete Cookie</a>
+            <h4>Reported</h4>
+            <ul id="console">
+            </ul>
+        </div>
+        <div class="content">
+            <h1>ABrat <small>a cache tolerant ab switch</small></h1>
+            <img src="img/gray-rat.jpg" />
 
-        <h2>Sample Experiments</h2>
-        <div class="row">
-            <div class="span-6 cl-a">
-                <p>Testing info button:
-                <a class="btn large info" href="">click</a>
-                </p>
-            </div>
+            <h2>Sample Experiments</h2>
+            <div class="row">
+                <div class="span-6 cl-a">
+                    <p>Testing info button:
+                    <a class="btn large info" href="">click</a>
+                    </p>
+                </div>
 
-            <div class="span-6 cl-b">
-                <p>Testing primary button:
-                <a class="btn large primary" href="">click</a>
-                </p>
-            </div>
+                <div class="span-6 cl-b">
+                    <p>Testing primary button:
+                    <a class="btn large primary" href="">click</a>
+                    </p>
+                </div>
 
-            <div class="span-6 ba-a">experiment ba a
-                <a class="btn large info" href="">link</a>
-            </div>
-            <div class="span-6 ba-b">experiment ba b
-                <a class="btn small info" href="">link</a>
+                <div class="span-6 ba-a">experiment ba a
+                    <a class="btn large info" href="">link</a>
+                </div>
+                <div class="span-6 ba-b">experiment ba b
+                    <a class="btn small info" href="">link</a>
+                </div>
             </div>
         </div>
     </div>
