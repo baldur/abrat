@@ -53,7 +53,7 @@
     var experiments = PATCH.ab.report(function(abhash){
         return $.map(abhash, function(v,k){return k+"-"+v}).join(" | ");
     });
-    _gaq.push(['_setCustomVar', 1, 'Experiments', expermiments, 1]);
+    _gaq.push(['_setCustomVar', 1, 'Experiments', experiments, 1]);
     // end abrat stuff
     _gaq.push(['_trackPageview']);
 
