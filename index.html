@@ -91,27 +91,44 @@
             <h1>ABrat <small>a cache tolerant ab switch</small></h1>
             <img src="img/gray-rat.jpg" />
 
-            <h2>Sample Experiments</h2>
-            <div class="row">
-                <div class="span-6 cl-a">
-                    <p>Testing info button:
-                    <a class="btn large info" href="">click</a>
-                    </p>
-                </div>
+            <h2>Button Style Tests</h2>
+            <p>Lets say that we want to have a button for users to click on
+            and we want to make sure we pick the button that performs the
+            best</p>
+            <p>We are considering two options the<br/>
+                <a class="btn large info" href="">info style</a>
+                <br/>vs.<br/>
+                <a class="btn large primary" href="">primary style</a>
+                <br/> button
+            </p>
+            <p>We can simply just ab test it:
+                <span class="cl-a"><a class="btn large info" href="">now
+                        running info</a></span>
+                <span class="cl-b"><a class="btn large primary" href="">now
+                        running primary</a></span>
+            </p>
+            <hr />
 
-                <div class="span-6 cl-b">
-                    <p>Testing primary button:
-                    <a class="btn large primary" href="">click</a>
-                    </p>
-                </div>
+            <h2>Button Style Tests</h2>
+            <p>Now lets say we have concluded that the primary button performs
+            better and we want to see if size matters then we can simply
+            test:<br/>
+                <a class="btn large primary" href="">large primary</a>
+                <br/>vs.</br>
+                <a class="btn small primary" href="">small primary</a>
+            </p>
+            <p>Now we test size:
+                <span class="ba-a"><a class="btn large primary" href="">now running large</a></span>
+                <span class="ba-b"><a class="btn small primary" href="">now running small</a></span></p>
 
-                <div class="span-6 ba-a">experiment ba a
-                    <a class="btn large info" href="">link</a>
-                </div>
-                <div class="span-6 ba-b">experiment ba b
-                    <a class="btn small info" href="">link</a>
-                </div>
-            </div>
+            <hr />
+            <h2>Verbiage Tests</h2>
+            <p>Lets say we are testing different wordings on links to see what works.</p>
+            <p><a href="">Lovely</a> vs. <a href="">Wonderful</a></p>
+            <p>Now we can test it:
+                <span class="sh-a"><a href="">Lovely</a></span>
+                <span class="sh-b"><a href="">Wonderful</a></span></p>
+
         </div>
     </div>
 </body>
