@@ -68,18 +68,17 @@
             }
             return ret;
         };
-        var style = "";
-        var writeRules = function(name){
-            style += "body."+name+"-a ."+name+"-b { display: none !important }";
-            style += "body."+name+"-b ."+name+"-a { display: none !important }";
-        };
-        var getCSSrules = function(){
-            return document.createTextNode(style);
-        };
-        var getCssText = function(){
-            return style;
-        };
+        var insertStyles = function(rules) {
+            var styleNode = document.createElement('style');
+            styleNode.setAttribute('type', 'text/css');
 
+            if (styleNode.styleSheet) { // IE
+                styleNode.styleSheet.cssText = rules;
+            } else {
+                styleNode.appendChild(document.createTextNode(rules));
+            }
+            document.getElementsByTagName('head')[0].appendChild(styleNode);
+        };
         var self = {
             'report' :  function(func){
                 var ret = {};
@@ -98,7 +97,7 @@
                 }
             },
             'init' : function(){
-
+                var cssRules = "";
                 for(var i in running_experiments) {
                     if(running_experiments.hasOwnProperty(i)) {
                         var variant;
@@ -109,21 +108,12 @@
                             variants[i] = ['a','b'].indexOf(variant);
                         }
                         document.body.className += " " + i + "-" + variant;
-                        writeRules(i);
+                        cssRules += "body."+i+"-a ."+i+"-b { display: none !important }";
+                        cssRules += "body."+i+"-b ."+i+"-a { display: none !important }";
                     }
                 }
-
                 setCookie(cookieName, encode(variants));
-
-                var styleNode = document.createElement('style');
-                styleNode.setAttribute('type', 'text/css');
-
-                if (styleNode.styleSheet) { // IE
-                    styleNode.styleSheet.cssText = getCssText();
-                } else {
-                    styleNode.appendChild(getCSSrules());
-                }
-                document.getElementsByTagName('head')[0].appendChild(styleNode);
+                insertStyles(cssRules);
             }
         };
         return self;
