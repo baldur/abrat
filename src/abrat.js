@@ -44,85 +44,84 @@
             }
             return ret;
         };
+        var encode = function(variants) {
+            var ret = "";
+            for(var i in variants) {
+                if(variants.hasOwnProperty(i)) {
+                    ret += i+variants[i]+"-";
+                }
+            }
+            return ret.slice(0,-1);
+        };
+        var running_experiments = decode(experiments);
+        var variants = decode(getCookie(cookieName));
+        var switcher = function(split) {
+            var random = Math.ceil((Math.random()*10)),
+                ret;
+            if(!arguments.length) {
+                split = 5;
+            }
+            if(split <= random) {
+                ret = 0;
+            } else {
+                ret = 1;
+            }
+            return ret;
+        };
         var style = "";
+        var writeRules = function(name){
+            style += "body."+name+"-a ."+name+"-b { display: none !important }";
+            style += "body."+name+"-b ."+name+"-a { display: none !important }";
+        };
+        var getCSSrules = function(){
+            return document.createTextNode(style);
+        };
+        var getCssText = function(){
+            return style;
+        };
 
         var self = {
-            'running_experiments' : decode(experiments),
-            'variants' : decode(getCookie(cookieName)),
-            'encode' : function(variants) {
-                var ret = "";
-                for(var i in variants) {
-                    if(variants.hasOwnProperty(i)) {
-                        ret += i+variants[i]+"-";
-                    }
-                }
-                return ret.slice(0,-1);
-            },
-            'switcher' : function(split) {
-                var random = Math.ceil((Math.random()*10)),
-                    ret;
-                if(!arguments.length) {
-                    split = 5;
-                }
-                if(split <= random) {
-                    ret = 0;
-                } else {
-                    ret = 1;
-                }
-                return ret;
-            },
-            'writeRules' : function(name){
-                style += "body."+name+"-a ."+name+"-b { display: none !important }";
-                style += "body."+name+"-b ."+name+"-a { display: none !important }";
-            },
-            'getCSSrules' : function(){
-                return document.createTextNode(style);
-            },
-            'getCssText' : function(){
-                return style;
-            },
             'report' :  function(func){
                 var ret = {};
-                for(var i in ns.ab.variants) {
-                    if(ns.ab.variants.hasOwnProperty(i)) {
-                        ret[i] = ['a','b'][ns.ab.variants[i]];
+                for(var i in variants) {
+                    if(variants.hasOwnProperty(i)) {
+                        ret[i] = ['a','b'][variants[i]];
                     }
                 }
                 return func(ret);
             },
             'attachHandlers' : function(func){
-                for(var i in ns.ab.variants) {
-                    if(ns.ab.variants.hasOwnProperty(i)) {
-                        func(i+"-"+ ['a','b'][ns.ab.variants[i]]);
+                for(var i in variants) {
+                    if(variants.hasOwnProperty(i)) {
+                        func(i+"-"+ ['a','b'][variants[i]]);
                     }
                 }
             },
             'init' : function(){
 
-                for(var i in ns.ab.running_experiments) {
-                    if(ns.ab.running_experiments.hasOwnProperty(i)) {
-                        var variant,
-                            variants = ns.ab.variants;
+                for(var i in running_experiments) {
+                    if(running_experiments.hasOwnProperty(i)) {
+                        var variant;
                         if( typeof(variants[i]) !== "undefined" ) {
                             variant = ['a','b'][variants[i]];
                         } else {
-                            variant = ['a','b'][ns.ab.switcher(ns.ab.running_experiments[i])];
+                            variant = ['a','b'][switcher(running_experiments[i])];
                             variants[i] = ['a','b'].indexOf(variant);
                         }
                         document.body.className += " " + i + "-" + variant;
-                        ns.ab.writeRules(i);
+                        writeRules(i);
                     }
                 }
 
-                setCookie(cookieName, ns.ab.encode(ns.ab.variants));
+                setCookie(cookieName, encode(variants));
 
                 var styleNode = document.createElement('style');
                 styleNode.setAttribute('type', 'text/css');
 
                 if (styleNode.styleSheet) { // IE
-                    styleNode.styleSheet.cssText = ns.ab.getCssText();
+                    styleNode.styleSheet.cssText = getCssText();
                 } else {
-                    styleNode.appendChild(ns.ab.getCSSrules());
+                    styleNode.appendChild(getCSSrules());
                 }
                 document.getElementsByTagName('head')[0].appendChild(styleNode);
             }
