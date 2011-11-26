@@ -83,17 +83,17 @@
             },
             'report' :  function(func){
                 var ret = {};
-                for(var i in variants) {
-                    if(variants.hasOwnProperty(i)) {
-                        ret[i] = ['a','b'][variants[i]];
+                for(var i in ns.ab.variants) {
+                    if(ns.ab.variants.hasOwnProperty(i)) {
+                        ret[i] = ['a','b'][ns.ab.variants[i]];
                     }
                 }
                 return func(ret);
             },
             'attachHandlers' : function(func){
-                for(var i in variants) {
-                    if(variants.hasOwnProperty(i)) {
-                        func(i+"-"+ ['a','b'][variants[i]]);
+                for(var i in ns.ab.variants) {
+                    if(ns.ab.variants.hasOwnProperty(i)) {
+                        func(i+"-"+ ['a','b'][ns.ab.variants[i]]);
                     }
                 }
             },
