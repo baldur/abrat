@@ -1,7 +1,21 @@
 (function() {
     var ns = $ABRAT.ns || $ABRAT,
+        names = {},
         cookieName = $ABRAT.cookieName || 'abtests',
-        experiments = $ABRAT.experiments;
+        experiments = function() {
+            var decodable = [];
+            for(var i in $ABRAT.experiments) {
+                if($ABRAT.experiments.hasOwnProperty(i)) {
+                    var exp = $ABRAT.experiments[i];
+                    if(!exp.weight) {
+                        exp.weight = 50;
+                    }
+                    names[exp.key] = exp.name;
+                    decodable.push(exp.key + (parseInt(Math.round(exp.weight/10), 10)));
+                }
+            }
+            return decodable.join('-');
+        }();
 
     if(!String.prototype.trim) {
         String.prototype.trim = function () {
@@ -84,15 +98,19 @@
                 var ret = {};
                 for(var i in variants) {
                     if(variants.hasOwnProperty(i)) {
-                        ret[i] = ['a','b'][variants[i]];
+                        ret[names[i]] = ['a','b'][variants[i]];
                     }
                 }
                 return func(ret);
             },
             'attachHandlers' : function(func){
+                var variant, selector, nameVariant;
                 for(var i in variants) {
                     if(variants.hasOwnProperty(i)) {
-                        func(i+"-"+ ['a','b'][variants[i]]);
+                        variant = ['a','b'][variants[i]];
+                        selector = i+"-"+ variant;
+                        nameVariant = names[i] + " (" + variant + ")";
+                        func(selector, nameVariant);
                     }
                 }
             },
