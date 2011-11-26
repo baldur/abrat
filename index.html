@@ -12,7 +12,8 @@
         //cookieName : '', //defaults to abtests
         names : {
             cl: 'primary vs info',
-            sh: 'large vs small'
+            ba: 'large vs small',
+            sh: 'wonderful vs lovely'
         },
         experiments : 'cl3-sh4-ba4' // what experiemnts are running on page
     };
@@ -56,7 +57,10 @@
     // report abrat stuff to google analytics
                              // | which custom var                // | scope visitor level
     var experiments = PATCH.ab.report(function(abhash){
-        return $.map(abhash, function(v,k){return k+"-"+v}).join(" | ");
+        return $.map(abhash, function(v,k){
+            _gaq.push(['_trackEvent', k+"-"+v, 'loaded']);
+            return k+"-"+v
+        }).join(" | ");
     });
     _gaq.push(['_setCustomVar', 1, 'Experiments', experiments, 1]);
     // end abrat stuff
