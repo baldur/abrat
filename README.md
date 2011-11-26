@@ -12,17 +12,34 @@
     var $ABRAT = {
         ns : SOMENS, //defaults to $ABRAT 
         //cookieName : '', //defaults to abtests
-        experiments : 'cl3-sh4-ba4' // what experiemnts are running on page
+        experiments : [
+            {'key' : 'cl', // two alpha letter identifer
+             'name' : 'primary vs ino',
+             'weight' : 60 }, // persentage of a 50% if skipped only in increments of 10s will be rounded
+            {'key' : 'ba',
+             'name' : 'large vs small',
+             'weight' : 40 },
+            {'key' : 'sh',
+             'name' : 'wonderful vs lovely'}
+        ]
     };
 
-#### right after body tag opens
+###i right after body tag opens
     <script src="./src/abrat.js"></script>
 
 #### then you can implement your reporting hooks for page load for GA example
-    _gaq.push(['_setCustomVar', 1, 'Experiments', SOMENS.ab.report(), 1]);
+    var experiments = SOMENS.ab.report(function(abhash){
+        return $.map(abhash, function(v,k){
+            // you can if you like fire a load event instead or in addition to 
+            // having all experiments reported at once via custom var
+            _gaq.push(['_trackEvent', k+" ("+v+")", 'loaded']);
+            return k+" ("+v+")"
+        }).join(" | ");
+    });
+    _gaq.push(['_setCustomVar', 1, 'Experiments', experiments, 1]);
 
 #### and for some hooks on click events in experiments
-    PATCH.ab.attachHandlers(function(sel){
+    PATCH.ab.attachHandlers(function(sel,name){
         $(function(){
             // for older than 1.7 use
             //$('body .' + sel).delegate('a','mousedown', function() {
