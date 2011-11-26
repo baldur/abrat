@@ -96,37 +96,41 @@
                         func(i+"-"+ ['a','b'][variants[i]]);
                     }
                 }
+            },
+            'init' : function(){
+
+                for(var i in ns.ab.running_experiments) {
+                    if(ns.ab.running_experiments.hasOwnProperty(i)) {
+                        var variant,
+                            variants = ns.ab.variants;
+                        if( typeof(variants[i]) !== "undefined" ) {
+                            variant = ['a','b'][variants[i]];
+                        } else {
+                            variant = ['a','b'][ns.ab.switcher(ns.ab.running_experiments[i])];
+                            variants[i] = ['a','b'].indexOf(variant);
+                        }
+                        document.body.className += " " + i + "-" + variant;
+                        ns.ab.writeRules(i);
+                    }
+                }
+
+                setCookie(cookieName, ns.ab.encode(ns.ab.variants));
+
+                var styleNode = document.createElement('style');
+                styleNode.setAttribute('type', 'text/css');
+
+                if (styleNode.styleSheet) { // IE
+                    styleNode.styleSheet.cssText = ns.ab.getCssText();
+                } else {
+                    styleNode.appendChild(ns.ab.getCSSrules());
+                }
+                document.getElementsByTagName('head')[0].appendChild(styleNode);
             }
         };
         return self;
     })();
 
+    ns.ab.init();
 
-    for(var i in ns.ab.running_experiments) {
-        if(ns.ab.running_experiments.hasOwnProperty(i)) {
-            var variant,
-                variants = ns.ab.variants;
-            if( typeof(variants[i]) !== "undefined" ) {
-                variant = ['a','b'][variants[i]];
-            } else {
-                variant = ['a','b'][ns.ab.switcher(ns.ab.running_experiments[i])];
-                variants[i] = ['a','b'].indexOf(variant);
-            }
-            document.body.className += " " + i + "-" + variant;
-            ns.ab.writeRules(i);
-        }
-    }
-
-    setCookie(cookieName, ns.ab.encode(ns.ab.variants));
-
-    var style = document.createElement('style');
-    style.setAttribute('type', 'text/css');
-
-    if (style.styleSheet) { // IE
-      style.styleSheet.cssText = ns.ab.getCssText();
-    } else {
-      style.appendChild(ns.ab.getCSSrules());
-    }
-    document.getElementsByTagName('head')[0].appendChild(style);
 })();
 
