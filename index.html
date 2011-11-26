@@ -86,10 +86,19 @@
     });
 
     </script>
-
-    <div class="container-fluid">
+    <div class="topbar" data-scrollspy="scrollspy">
+      <div class="topbar-inner">
+        <div class="container">
+          <a class="brand" href="">ABrat</a>
+          <ul class="nav">
+            <li class="active"><a href="#overview">Overview</a></li>
+            <li><a href="#docs">Documentation</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid" style="margin-top: 50px">
         <div class="sidebar">
-            <h3>Overview</h3>
             <a id="deleteCookie" class="btn small danger" href="">Delete Cookie</a>
             <h4>Reported</h4>
             <ul id="console">
@@ -99,6 +108,10 @@
             <h1>ABrat <small>a cache tolerant ab switch</small></h1>
             <img height="300" width="582" src="img/gray-rat.jpg" />
 
+            <section id="overview">
+            <div class="page-header">
+                <h1>Overview <small>what the hell is this thing</small></h1>
+            </div>
             <h2>Button Style Tests</h2>
             <p>Lets say that we want to have a button for users to click on
             and we want to make sure we pick the button that performs the
@@ -137,6 +150,89 @@
                 <span class="sh-a"><a href="">Lovely</a></span>
                 <span class="sh-b"><a href="">Wonderful</a></span></p>
 
+            </section>
+            <section id="docs">
+                <div class="page-header">
+                    <h1>Documentation <small>how the hell does this thing work</small></h1>
+                </div>
+                <h2>Configuration</h2>
+                <p>Configuration object can be set early on in the header. It's always a good idea to have a good name space that 
+                   organize your page utilities. This can be passed in so one doesn't have to use $ABRAT constance but rather your
+                   own and access things through the ab attribute. In the excample we'll use PATCH since this was developed at 
+                   <a href='http://patch.com'>patch.com</a></p>
+                <code>
+                  <pre>
+    var PATCH = {};
+    var $ABRAT = {
+        ns : PATCH, //defaults to $ABRAT 
+        //cookieName : '', //defaults to abtests
+        experiments : [
+            {'key' : 'cl',
+            'name' : 'primary vs ino',
+            'weight' : 60 }, // persentage of a 50% if skipped only in increments of 10s will be rounded
+            {'key' : 'ba',
+            'name' : 'large vs small',
+            'weight' : 40 },
+            {'key' : 'sh',
+            'name' : 'wonderful vs lovely'}
+        ],
+    };
+                  </pre>
+                </code>
+                <p>Then right after the body opens slap in the abrat javascript code either by inlining or requiring the javascript file<p>
+                <code>
+                <pre>
+    &lt;!-- for simple --> 
+    &lt;script src="./src/abrat.js"&gt;&lt;/script&gt;
+                  </pre>
+                </code>
+                <p>or</p>
+                <code>
+                <pre>
+
+    &lt;!-- for optimized pages one less http request  -->
+    &lt;script&gt;
+(function(){var j=$ABRAT.ns||$ABRAT,i={},k=$ABRAT.cookieName||"abtests",...
+    &lt;/script&gt;
+                </pre>
+                </code>
+                <h2>Page Level Reporting</h2>
+                <p>Now after this business you have two more things to cover.
+                One is to report to your reporting suite I use google
+                analytics here. The abrat has a concept of a report which you
+                pass in anonmous function which gets a hash passed in which
+                you can do things with. Here I aggregate all experiments and
+                which variant was is rendered into a | sparated string. I also
+                push a trackEvent indicating that experiments have been
+                loaded. How you implement this highly depends on your report
+                suite and how you use it.</p>
+                <code><pre>
+    var experiments = PATCH.ab.report(function(abhash){
+        return $.map(abhash, function(v,k){
+            _gaq.push(['_trackEvent', k+" ("+v+")", 'loaded']);
+            return k+" ("+v+")"
+        }).join(" | ");
+    });
+    _gaq.push(['_setCustomVar', 1, 'Experiments', experiments, 1]);
+                </pre></code>
+                <h2>Action Level Reporting</h2>
+                <p>Next, we probably want to messure any interactions on
+                things in our experiments ... so there is an ability to attach
+                handlers on elements in those dom nodes that are being
+                experimented with</p>
+                <code><pre>
+        PATCH.ab.attachHandlers(function(sel,name){
+            $(function(){
+                $('body .' + sel).on('mousedown', 'a', function(e) {
+                    // report that abrat element was clicked
+                    _gaq.push(['_trackEvent', name, 'clicked']);
+                });
+            });
+        });
+                </pre></code>
+                <p>Again all depends on how you want to implement this
+                stuff, after all abrat does nothing but the switching.</p>
+            </section>
         </div>
     </div>
 </body>
