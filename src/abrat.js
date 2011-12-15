@@ -122,8 +122,8 @@
                         if( typeof(variants[i]) !== "undefined" ) {
                             variant = ['a','b'][variants[i]];
                         } else {
-                            variant = ['a','b'][switcher(running_experiments[i])];
-                            variants[i] = ['a','b'].indexOf(variant);
+                            variants[i] = switcher(running_experiments[i]);
+                            variant = ['a','b'][variants[i]];
                         }
                         document.body.className += " " + i + "-" + variant;
                         cssRules += "body."+i+"-a ."+i+"-b { display: none !important }";
@@ -140,4 +140,3 @@
     ns.ab.init();
 
 })();
-
